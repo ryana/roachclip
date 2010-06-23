@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "lib/roachclip.rb",
      "lib/roachclip/version.rb",
+     "roachclip.gemspec",
      "script/runner.rb",
      "test/data/fonz.jpg",
      "test/test_helper.rb",
