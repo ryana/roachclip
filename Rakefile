@@ -14,6 +14,7 @@ begin
     gemspec.add_development_dependency 'shoulda', '2.11.0'
     gemspec.add_development_dependency 'mongo_mapper', '0.8.2'
   end
+  Jeweler::GemcutterTasks.new
 rescue LoadError
   puts "Jeweler not available. Install it with: gem install jeweler"
 end
