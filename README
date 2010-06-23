@@ -1,0 +1,40 @@
+=Roachclip
+
+Joint lets you do:
+
+    class Doc
+      include MongoMapper::Document
+      plugin Joint
+
+      attachment :image
+    end
+
+And stores everything in GridFS, but doesn't have any image processing
+
+Paperclip lets you do:
+
+    class Doc < ActiveRecord::Base
+      has_attached_file :image, :styles => {:thumb => {:geometry => '50x50>'}, :large => {:geometry => '500x500>'}}
+    end
+
+But is attached to ActiveRecord and wants to work w/ a regular filesystem.
+
+Roachclip lets you do:
+
+    class Doc
+      include MongoMapper::Document
+      plugin Roachclip
+
+      roachclip :image, :styles => {:thumb => {:geometry => '50x50>'}, :large => {:geometry => '500x500>'}}
+    end
+
+Which combines Joint's GridFS-ness with Paperclip's image processing-ness
+
+= License
+
+roachclip is released under the MIT license.
+
+
+= Support
+
+Just email me at ryan@angilly.com with questions, bugs, or patches.
