@@ -28,7 +28,9 @@ Roachclip lets you do:
       roachclip :image, :styles => {:thumb => {:geometry => '50x50>'}, :large => {:geometry => '500x500>'}}
     end
 
-Which combines Joint's GridFS-ness with Paperclip's image processing-ness
+Which combines Joint's GridFS-ness with Paperclip's image processing-ness.  Note that Roachclip relies on Paperclip
+and Joint.  You'll have to have those gems installed (rubygems gem deps should take care of it for you).  Roachclip
+will plug Joint into your models automatically.
 
 = License
 
