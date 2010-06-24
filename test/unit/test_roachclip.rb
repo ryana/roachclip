@@ -43,6 +43,26 @@ class RoachclipTest < Test::Unit::TestCase
         Doc.roachclip :image, @opts
       end
 
+      context "with validations" do
+        setup do
+          Doc.validates_roachclip :image
+        end
+
+        context "on a new instance" do
+          setup do
+            @doc = Doc.new
+          end
+
+          should "validate presence of images" do
+            assert !@doc.valid?
+            assert @doc.errors.on(:image)
+          
+            @doc.image = File.open(test_file_path)
+            assert @doc.valid?
+          end
+        end
+      end
+
       should "add attachments for each option style" do
         d = Doc.new
 
@@ -54,10 +74,8 @@ class RoachclipTest < Test::Unit::TestCase
 
       context "with a saved document w/ image" do
         setup do
-          @fname = 'fonz.jpg'
-          @test_file_path = File.join(File.dirname(__FILE__), '..', 'data', @fname)
           @doc = Doc.new
-          @doc.image = File.open(@test_file_path)
+          @doc.image = File.open(test_file_path)
 
           assert @doc.save
         end
@@ -65,14 +83,14 @@ class RoachclipTest < Test::Unit::TestCase
         should "still save documents w/ images" do
           d = Doc.find @doc.id
 
-          assert_equal @fname, d.image_name
-          assert_equal File.size(@test_file_path), d.image_size
+          assert_equal fname, d.image_name
+          assert_equal File.size(test_file_path), d.image_size
         end
 
         should "destroy thumbs when image set to nil" do
           @doc.image = nil
           @doc.save!
-       
+
           d = Doc.find(@doc.id)
           # until joint supports clearing IDs
           assert_raises(Mongo::GridFileNotFound) { d.image_thumb.read }
@@ -88,5 +106,13 @@ class RoachclipTest < Test::Unit::TestCase
         end
       end
     end
+  end
+
+  def fname
+    'fonz.jpg'
+  end
+
+  def test_file_path
+    @test_file_path = File.join(File.dirname(__FILE__), '..', 'data', fname)
   end
 end

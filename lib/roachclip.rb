@@ -34,6 +34,15 @@ module Roachclip
       before_save :process_roaches
       before_save :destroy_nil_roaches
     end
+
+    def validates_roachclip name, options = {}
+      default_options = {:present => true}
+      options = default_options.merge(options)
+
+      if options[:present]
+        validates_each name, :logic => lambda { errors.add(name, 'is required') unless send("#{name}_id").present? }
+      end
+    end
   end
 
   module InstanceMethods
