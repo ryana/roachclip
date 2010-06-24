@@ -1,4 +1,5 @@
 require 'test/unit'
+require 'ruby-debug'
 require 'shoulda'
 require 'mongo_mapper'
 

@@ -69,6 +69,16 @@ class RoachclipTest < Test::Unit::TestCase
           assert_equal File.size(@test_file_path), d.image_size
         end
 
+        should "destroy thumbs when image set to nil" do
+          @doc.image = nil
+          @doc.save!
+       
+          d = Doc.find(@doc.id)
+          # until joint supports clearing IDs
+          assert_raises(Mongo::GridFileNotFound) { d.image_thumb.read }
+          assert_raises(Mongo::GridFileNotFound) { d.image_large.read }
+        end
+
         should "have thumb and large" do
           assert @doc.image_thumb.size > 0
           assert @doc.image_large.size > 0
