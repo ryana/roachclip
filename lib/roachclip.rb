@@ -2,6 +2,7 @@ require 'set'
 require 'tempfile'
 require 'paperclip'
 require 'joint'
+require 'roachclip/validations'
 
 module Paperclip
   class << self
@@ -35,13 +36,8 @@ module Roachclip
       before_save :destroy_nil_roaches
     end
 
-    def validates_roachclip name, options = {}
-      default_options = {:present => true}
-      options = default_options.merge(options)
-
-      if options[:present]
-        validates_each name, :logic => lambda { errors.add(name, 'is required') unless send("#{name}_id").present? }
-      end
+    def validates_roachclip(*args)
+      add_validations(args, Roachclip::Validations::ValidatesPresenceOf)
     end
   end
 
