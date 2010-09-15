@@ -49,7 +49,7 @@ module Roachclip
 
         return unless assigned_attachments[name]
 
-        src = Tempfile.new ["roachclip", name.to_s].join('.')
+        src = Tempfile.new ["roachclip", name.to_s].join('-')
         src.write assigned_attachments[name].read
         src.close
         
