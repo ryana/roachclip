@@ -95,14 +95,6 @@ class RoachclipTest < Test::Unit::TestCase
           assert @doc.save
         end
 
-        should "have image_path default to fs collection" do
-          t = Time.now
-          Time.stubs(:now).returns t
-
-          i = @doc.image.id.to_s
-          assert_equal "/gridfs/fs/#{i}-#{t.to_i}", @doc.image_path
-        end
-
         should "still save documents w/ images" do
           d = Doc.find @doc.id
 
