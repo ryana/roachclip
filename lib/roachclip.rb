@@ -23,7 +23,7 @@ module Roachclip
   end
 
   module ClassMethods
-    def roachclip name, options
+    def roachclip name, options = {}
       self.attachment name
 
       raise InvalidAttachment unless attachment_names.include?(name)
