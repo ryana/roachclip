@@ -38,12 +38,16 @@ module Roachclip
       before_save :destroy_nil_roaches
 
       self.send(:define_method, "#{name}_path") do
-        (path % [self.send(name).id.to_s, Time.now.to_i]).chomp('-')
+        time = self.attributes['updated_at'] || Time.now
+        time = time.to_i
+        (path % [self.send(name).id.to_s, time]).chomp('-')
       end
  
       options[:styles].each do |k,v|
         self.send(:define_method, "#{name}_#{k}_path") do
-          (path % [self.send(name).id.to_s, Time.now.to_i]).chomp('-')
+          time = self.attributes['updated_at'] || Time.now
+          time = time.to_i
+          (path % [self.send(name).id.to_s, time]).chomp('-')
         end
       end
     end
