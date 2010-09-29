@@ -47,7 +47,7 @@ module Roachclip
         self.send(:define_method, "#{name}_#{k}_path") do
           time = self.attributes['updated_at'] || Time.now
           time = time.to_i
-          (path % [self.send(name).id.to_s, time]).chomp('-')
+          (path % [self.send("#{name}_#{k}").id.to_s, time]).chomp('-')
         end
       end
     end
