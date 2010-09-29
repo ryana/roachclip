@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roachclip}
-  s.version = "0.2.3"
+  s.version = "0.2.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ryan Angilly"]
-  s.date = %q{2010-09-26}
+  s.date = %q{2010-09-28}
   s.description = %q{Let you upload images and have use paperclip's hotness to post process them}
   s.email = %q{ryan@angilly.com}
   s.extra_rdoc_files = [
