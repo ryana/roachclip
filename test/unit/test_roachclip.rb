@@ -72,6 +72,21 @@ class RoachclipTest < Test::Unit::TestCase
         assert d.respond_to?(:image_large=)
       end
 
+      context "with a custom path" do
+        setup do
+          Doc.roachclip :image, :path => "/gridfs/assets/%s"
+          @doc = Doc.new
+          @doc.image = File.open(test_file_path)
+
+          assert @doc.save
+        end
+
+        should "have image_path with custom path" do
+          i = @doc.image.id.to_s
+          assert_equal "/gridfs/assets/#{i}", @doc.image_path
+        end
+      end
+
       context "with a saved document w/ image" do
         setup do
           @doc = Doc.new

@@ -23,17 +23,33 @@ module Roachclip
   end
 
   module ClassMethods
-    def roachclip name, options
+    def roachclip name, options = {}
       self.attachment name
 
       raise InvalidAttachment unless attachment_names.include?(name)
 
+      path = options.delete(:path) || "/gridfs/fs/%s-%s"
       self.roaches << {:name => name, :options => options}
- 
+
+      options[:styles] ||= {}
       options[:styles].each { |k,v| self.attachment "#{name}_#{k}"}
 
       before_save :process_roaches
       before_save :destroy_nil_roaches
+
+      self.send(:define_method, "#{name}_path") do
+        time = self.attributes['updated_at'] || Time.now
+        time = time.to_i
+        (path % [self.send(name).id.to_s, time]).chomp('-')
+      end
+ 
+      options[:styles].each do |k,v|
+        self.send(:define_method, "#{name}_#{k}_path") do
+          time = self.attributes['updated_at'] || Time.now
+          time = time.to_i
+          (path % [self.send("#{name}_#{k}").id.to_s, time]).chomp('-')
+        end
+      end
     end
 
     def validates_roachclip(*args)
