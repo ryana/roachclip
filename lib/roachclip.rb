@@ -31,8 +31,10 @@ module Roachclip
       path = options.delete(:path) || "/gridfs/fs/%s-%s"
       self.roaches << {:name => name, :options => options}
 
+      options[:default_style] ||= :original
+      
       options[:styles] ||= {}
-      options[:styles].each { |k,v| self.attachment "#{name}_#{k}"}
+      options[:styles].each { |k,v| self.attachment "#{name}_#{k}" unless k == options[:default_style] }
 
       before_save :process_roaches
       before_save :destroy_nil_roaches
@@ -62,7 +64,8 @@ module Roachclip
       roaches.each do |img|
         name = img[:name]
         styles = img[:options][:styles]
-
+        default_style = img[:options][:default_style]
+        
         return unless assigned_attachments[name]
 
         src = Tempfile.new ["roachclip", name.to_s].join('-')
@@ -75,8 +78,14 @@ module Roachclip
           thumbnail = Paperclip::Thumbnail.new src, styles[style_key]
           tmp_file_name = thumbnail.make
           stored_file_name = send("#{name}_name").gsub(/\.(\w*)\Z/) { "_#{style_key}.#{$1}" }
-          send "#{name}_#{style_key}=", tmp_file_name
-          send "#{name}_#{style_key}_name=", stored_file_name
+
+          if style_key == default_style
+            send "#{name}=", tmp_file_name
+            send "#{name}_name=", stored_file_name
+          else
+            send "#{name}_#{style_key}=", tmp_file_name
+            send "#{name}_#{style_key}_name=", stored_file_name
+          end
         end
       end
     end
@@ -85,11 +94,12 @@ module Roachclip
       roaches.each do |img|
         name = img[:name]
         styles = img[:options][:styles]
-
+        default_style = img[:options][:default_style]
+        
         return unless @nil_attachments && @nil_attachments.include?(name)
 
         styles.keys.each do |style_key|
-          send "#{name}_#{style_key}=", nil
+          send "#{name}_#{style_key}=", nil unless style_key == default_style
         end
       end
     end

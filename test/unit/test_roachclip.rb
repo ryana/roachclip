@@ -121,6 +121,57 @@ class RoachclipTest < Test::Unit::TestCase
         end
       end
     end
+
+    context "with a default style" do
+      setup do
+        Doc.roachclip :image, { :styles => { :default => { :geometry => '100x100' }, :thumb => { :geometry => '50x50' } }, :default_style => :default }
+        @doc = Doc.new
+      end
+
+      should "not add an attachment for the default style" do
+        assert !@doc.respond_to?(:image_default)
+        assert !@doc.respond_to?(:image_default=)
+      end
+      
+      should "add attachment for thumb style" do
+        assert @doc.respond_to?(:image_thumb)
+        assert @doc.respond_to?(:image_thumb=)
+      end
+      
+      should "process all styles" do
+        Paperclip::Thumbnail.any_instance.expects(:make).twice
+        @doc.image = File.open(test_file_path)
+        @doc.save!
+      end
+      
+      should "not destroy the default style roach" do
+        @doc.image = File.open(test_file_path)
+        @doc.save!
+        
+        @doc.expects(:image_thumb=).with(nil).at_least_once
+        @doc.expects(:image_default=).never
+        @doc.image = nil
+        @doc.save!
+      end
+    end
+    
+    context "with the :original style" do
+      setup do
+        Doc.roachclip :image, { :styles => { :original => { :geometry => '100x100' } } }
+        @doc = Doc.new
+      end
+
+      should "behave as the default style" do
+        assert !@doc.respond_to?(:image_original)
+        assert !@doc.respond_to?(:image_original=)
+      end
+      
+      should "process the original image" do
+        Paperclip::Thumbnail.any_instance.expects(:make).once
+        @doc.image = File.open(test_file_path)
+        @doc.save!
+      end
+    end
   end
 
   def fname
