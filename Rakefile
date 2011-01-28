@@ -9,7 +9,7 @@ begin
     gemspec.authors = ["Ryan Angilly"]
 
     gemspec.add_dependency 'joint', '0.3.2'
-    gemspec.add_dependency 'paperclip', '2.3.3'
+    gemspec.add_dependency 'paperclip', '>=2.3.3'
  
     gemspec.add_development_dependency 'shoulda', '2.11.0'
     gemspec.add_development_dependency 'mongo_mapper', '0.8.2'
